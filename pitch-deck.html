@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEBULAX — Pitch Deck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @page { size: 16:9; margin: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #06060b;
+            color: #e8e6f0;
+            overflow-x: hidden;
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at 30% 40%, rgba(109,40,217,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 60%, rgba(6,182,212,0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .slide-num {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            color: #5c596b;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* Slide 1: Cover */
+        .cover-slide {
+            text-align: center;
+        }
+        .cover-slide .logo {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 24px;
+        }
+        .cover-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            background: linear-gradient(135deg, #c4b5fd, #67e8f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+        .cover-slide .tagline {
+            font-size: 1.3rem;
+            color: #9895a7;
+            margin-bottom: 40px;
+        }
+        .cover-slide .meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            color: #5c596b;
+        }
+        .cover-slide .meta span { color: #a78bfa; }
+
+        /* Section headers */
+        .section-tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            color: #06b6d4;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #c4b5fd;
+            margin: 20px 0 10px;
+        }
+
+        p {
+            color: #9895a7;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            max-width: 700px;
+        }
+
+        .highlight { color: #e8e6f0; font-weight: 600; }
+
+        /* Two column */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+        .stat-box {
+            background: #111119;
+            border: 1px solid rgba(109,40,217,0.12);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-val {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa, #67e8f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-lbl {
+            font-size: 0.72rem;
+            color: #5c596b;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 4px;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .card-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #111119;
+            border: 1px solid rgba(109,40,217,0.12);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #e8e6f0;
+        }
+        .card p {
+            font-size: 0.82rem;
+            color: #9895a7;
+            margin: 0;
+        }
+
+        /* List */
+        .check-list {
+            list-style: none;
+            margin: 12px 0;
+        }
+        .check-list li {
+            padding: 6px 0;
+            font-size: 0.92rem;
+            color: #9895a7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .check-list .icon { color: #10b981; font-weight: 700; }
+
+        /* Bar chart */
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 6px 0;
+        }
+        .bar-label {
+            width: 160px;
+            text-align: right;
+            font-size: 0.82rem;
+            color: #9895a7;
+        }
+        .bar-fill {
+            height: 22px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #7c3aed, #06b6d4);
+            opacity: 0.3;
+        }
+        .tl-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .tl-dot {
+            position: absolute;
+            left: -27px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #7c3aed;
+            background: #06060b;
+        }
+        .tl-item.active .tl-dot {
+            background: #7c3aed;
+            box-shadow: 0 0 10px rgba(124,58,217,0.5);
+        }
+        .tl-quarter {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.72rem;
+            color: #22d3ee;
+            font-weight: 500;
+        }
+        .tl-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 2px 0;
+        }
+        .tl-desc {
+            font-size: 0.8rem;
+            color: #5c596b;
+        }
+
+        /* CTA */
+        .cta-box {
+            background: linear-gradient(135deg, rgba(109,40,217,0.1), rgba(6,182,212,0.06));
+            border: 1px solid rgba(109,40,217,0.2);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .cta-box h2 {
+            margin-bottom: 12px;
+        }
+        .cta-box .accent {
+            background: linear-gradient(135deg, #c4b5fd, #67e8f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .cta-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .cta-links a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* Divider */
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #7c3aed, #06b6d4);
+            margin: 20px 0;
+        }
+
+        /* Navigation dots */
+        .nav-dots {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(109,40,217,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nav-dot:hover, .nav-dot.active {
+            background: #a78bfa;
+            transform: scale(1.3);
+        }
+
+        @media (max-width: 768px) {
+            .slide { padding: 40px 24px; }
+            .cover-slide h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.6rem; }
+            .two-col { grid-template-columns: 1fr; gap: 20px; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .card-grid { grid-template-columns: 1fr; }
+            .card-grid-2 { grid-template-columns: 1fr; }
+            .nav-dots { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Dots -->
+<div class="nav-dots" id="navDots"></div>
+
+<!-- SLIDE 1: Cover -->
+<div class="slide cover-slide" data-slide="1">
+    <div class="slide-num">01 / 10</div>
+    <div class="slide-content">
+        <svg class="logo" viewBox="0 0 120 120" fill="none">
+            <defs><linearGradient id="ring1" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse"><stop stop-color="#6d28d9"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+            <circle cx="60" cy="60" r="52" stroke="url(#ring1)" stroke-width="2" fill="none" opacity="0.5"/>
+            <path d="M38 68c0-12.2 10-22 22-22s22 9.8 22 22" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+            <circle cx="60" cy="42" r="7" fill="#fff"/><circle cx="42" cy="68" r="3.5" fill="#a78bfa"/><circle cx="78" cy="68" r="3.5" fill="#22d3ee"/>
+            <line x1="46" y1="78" x2="74" y2="78" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <h1>NEBULAX</h1>
+        <p class="tagline">The Decentralized AI Compute Network</p>
+        <div class="divider" style="margin: 20px auto;"></div>
+        <p style="text-align:center; max-width:500px; margin:0 auto 30px;">
+            Turning billions of idle devices into the world's largest AI processing network.
+        </p>
+        <div class="meta">
+            <span>$NBX</span> · July 2026 · nebulaxio.netlify.app
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 2: Problem -->
+<div class="slide" data-slide="2">
+    <div class="slide-num">02 / 10</div>
+    <div class="slide-content">
+        <div class="section-tag">The Problem</div>
+        <h2>AI's $100B Compute Crisis</h2>
+        <div class="two-col">
+            <div>
+                <p>
+                    The AI industry is facing an <span class="highlight">unprecedented compute shortage</span>. 
+                    Training a single large language model costs $50–100 million. 
+                    Inference demands are doubling every 6 months.
+                </p>
+                <p>
+                    Meanwhile, <span class="highlight">85% of consumer GPU capacity sits idle</span> — 
+                    billions of devices wasting trillions of cycles.
+                </p>
+            </div>
+            <div>
+                <div class="card">
+                    <h4>❌ Current Reality</h4>
+                    <ul class="check-list">
+                        <li><span class="icon">⚠</span> 80% compute controlled by 5 companies</li>
+                        <li><span class="icon">⚠</span> $50M+ to train one AI model</li>
+                        <li><span class="icon">⚠</span> Global South severely underserved</li>
+                        <li><span class="icon">⚠</span> Single points of failure</li>
+                        <li><span class="icon">⚠</span> Censorship & access denial risks</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 3: Solution -->
+<div class="slide" data-slide="3">
+    <div class="slide-num">03 / 10</div>
+    <div class="slide-content">
+        <div class="section-tag">Our Solution</div>
+        <h2>NEBULAX: The World's AI Brain</h2>
+        <p>
+            A decentralized network that aggregates idle computing power from devices worldwide 
+            into a unified, on-demand AI compute marketplace.
+        </p>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">🖥️</div>
+                <h4>One-Click Node</h4>
+                <p>Install on any device. Start earning in 60 seconds. No technical knowledge needed.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🏪</div>
+                <h4>Task Marketplace</h4>
+                <p>AI tasks auto-matched to your hardware. Image gen, LLM inference, training, rendering.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🤖</div>
+                <h4>AI Agent Hub</h4>
+                <p>Create, trade, deploy autonomous agents. Earn passive income 24/7.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔒</div>
+                <h4>Stake-to-Compute</h4>
+                <p>Access AI compute by staking tokens. No powerful hardware required.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h4>Live Dashboard</h4>
+                <p>Real-time earnings, uptime, and network contribution tracking.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🌍</div>
+                <h4>Global Network</h4>
+                <p>140+ countries. 12K+ nodes. The largest decentralized AI infrastructure.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 4: Market -->
+<div class="slide" data-slide="4">
+    <div class="slide-num">04 / 10</div>
+    <div class="slide-content">
+        <div class="section-tag">Market Opportunity</div>
+        <h2>$200B+ Market by 2030</h2>
+        <div class="two-col">
+            <div>
+                <div class="stats-row" style="grid-template-columns: 1fr 1fr;">
+                    <div class="stat-box">
+                        <div class="stat-val">$200B</div>
+                        <div class="stat-lbl">Cloud AI Market (2030)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val">$50B</div>
+                        <div class="stat-lbl">DePIN Market (2030)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val">40%</div>
+                        <div class="stat-lbl">Annual Growth</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val">5B+</div>
+                        <div class="stat-lbl">Idle Devices</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3>Why Now?</h3>
+                <ul class="check-list">
+                    <li><span class="icon">→</span> AI demand exploding (ChatGPT, Gemini, Claude)</li>
+                    <li><span class="icon">→</span> GPU shortage worsening globally</li>
+                    <li><span class="icon">→</span> DePIN sector gaining VC momentum</li>
+                    <li><span class="icon">→</span> Mobile GPU power increasing 10x</li>
+                    <li><span class="icon">→</span> Crypto infrastructure maturing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 5: Business Model -->
+<div class="slide" data-slide="5">
+    <div class="slide-num">05 / 10</div>
+    <div class="slide-content">
+        <div class="section-tag">Business Model</div>
+        <h2>How We Make Money</h2>
+        <div class="card-grid-2">
+            <div class="card">
+                <h4>💰 Transaction Fees</h4>
+                <p>5% fee on every compute transaction between buyers and providers. Scales with network usage.</p>
+            </div>
+            <div class="card">
+                <h4>🏢 Enterprise Tier</h4>
+                <p>Premium SLA, dedicated nodes, priority matching for enterprise AI companies. Monthly subscription.</p>
+            </div>
+            <div class="card">
+                <h4>🤖 Agent Marketplace</h4>
+                <p>10% commission on AI agent sales and rentals. Growing agent economy.</p>
+            </div>
+            <div class="card">
+                <h4>🔧 API Access</h4>
+                <p>Developer API for programmatic compute access. Usage-based pricing.</p>
+            </div>
+        </div>
+        <div class="stat-box" style="margin-top: 20px; text-align: left;">
+            <h4 style="color: #a78bfa; margin-bottom: 8px;">Revenue Projection</h4>
+            <div class="bar-row">
+                <div class="bar-label">Year 1</div>
+                <div class="bar-fill" style="width: 15%; background: #7c3aed;">$2M</div>
+            </div>
+            <div class="bar-row">
+                <div class="bar-label">Year 2</div>
+                <div class="bar-fill" style="width: 40%; background: #7c3aed;">$15M</div>
+            </div>
+            <div class="bar-row">
+                <div class="bar-label">Year 3</div>
+                <div class="bar-fill" style="width: 75%; background: linear-gradient(90deg, #7c3aed, #06b6d4);">$50M+</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 6: Tokenomics -->
+<div class="slide" data-slide="6">
+    <div class="slide-num">06 / 10</div>
+    <div class="slide-content">
+        <div class="section-tag">$NBX Token</div>
+        <h2>Tokenomics</h2>
+        <div class="two-col">
+            <div>
+                <div class="stat-box" style="margin-bottom: 16px;">
+                    <div class="stat-val">1,000,000,000</div>
+                    <div class="stat-lbl">Total Supply</div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Community</div>
+                    <div class="bar-fill" style="width: 40%; background: #7c3aed;">40%</div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Ecosystem</div>
+                    <div class="bar-fill" style="width: 20%; background: #06b6d4;">20%</div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Team</div>
+                    <div class="bar-fill" style="width: 15%; background: #f43f5e;">15%</div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Treasury</div>
+                    <div class="bar-fill" style="width: 10%; background: #f59e0b;">10%</div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Private Sale</div>
+                    <div class="bar-fill" style="width: 10%; background: #10b981;">10%</div>
+                </div>
+                <div class="bar-row">
+                    <div class="bar-label">Public Sale</div>
+                    <div class="bar-fill" style="width: 5%; background: #8b5cf6;">5%</div>
+                </div>
+            </div>
+            <div>
+                <h3>Deflationary Mechanics</h3>
+                <div class="card" style="margin-bottom: 12px;">
+                    <h4>🔥 2% Burn per Transaction</h4>
+                    <p>Every transaction permanently removes tokens from supply.</p>
+                </div>
+                <div class="card" style="margin-bottom: 12px;">
+                    <h4>📈 Staking Rewards (12-80% APY)</h4>
+                    <p>Lock tokens for higher rewards and network priority.</p>
+                </div>
+                <div class="card">
+                    <h4>⚡ Real Utility Demand</h4>
+                    <p>AI companies must buy $NBX to access compute.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 7: Traction -->
+<div class="slide" data-slide="7">
+    <div class="slide-num">07 / 10</div>
+    <div class="slide-content">
+        <div class="section-tag">Traction</div>
+        <h2>Early Momentum</h2>
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-val">47K+</div>
+                <div class="stat-lbl">Waitlist Members</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">12K+</div>
+                <div class="stat-lbl">Nodes Ready</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">140+</div>
+                <div class="stat-lbl">Countries</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">$50M+</div>
+                <div class="stat-lbl">VC Interest</div>
+            </div>
+        </div>
+        <div class="two-col" style="margin-top: 24px;">
+            <div class="card">
+                <h4>🌐 Community Growth</h4>
+                <ul class="check-list">
+                    <li><span class="icon">→</span> Twitter: Growing daily</li>
+                    <li><span class="icon">→</span> Discord: Active community</li>
+                    <li><span class="icon">→</span> Telegram: 100+ members</li>
+                    <li><span class="icon">→</span> Founding Members joining</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>🛠️ Product Progress</h4>
+                <ul class="check-list">
+                    <li><span class="icon">→</span> Website live</li>
+                    <li><span class="icon">→</span> Whitepaper published</li>
+                    <li><span class="icon">→</span> Payment system active</li>
+                    <li><span class="icon">→</span> Node software in development</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 8: Roadmap -->
+<div class="slide" data-slide="8">
+    <div class="slide-num">08 / 10</div>
+    <div class="slide-content">
+        <div class="section-tag">Roadmap</div>
+        <h2>The Path Forward</h2>
+        <div class="two-col">
+            <div class="timeline">
+                <div class="tl-item active">
+                    <div class="tl-dot"></div>
+                    <div class="tl-quarter">Q3 2026</div>
+                    <div class="tl-title">Foundation</div>
+                    <div class="tl-desc">Testnet, community, Founding Members</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-quarter">Q4 2026</div>
+                    <div class="tl-title">Launch</div>
+                    <div class="tl-desc">Mainnet, TGE, CEX listings</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-quarter">Q1 2027</div>
+                    <div class="tl-title">Scale</div>
+                    <div class="tl-desc">Mobile app, 100K nodes, Binance</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-quarter">Q2 2027</div>
+                    <div class="tl-title">Ecosystem</div>
+                    <div class="tl-desc">Agent hub, multi-chain, enterprise</div>
+                </div>
+            </div>
+            <div>
+                <h3>Key Milestones</h3>
+                <div class="card" style="margin-bottom: 12px;">
+                    <h4>🎯 100K Active Nodes</h4>
+                    <p>Largest DePIN network by node count</p>
+                </div>
+                <div class="card" style="margin-bottom: 12px;">
+                    <h4>🎯 Top 30 Token</h4>
+                    <p>Market cap leadership in DePIN sector</p>
+                </div>
+                <div class="card">
+                    <h4>🎯 $1B DAO Treasury</h4>
+                    <p>Self-sustaining ecosystem governance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 9: Competition -->
+<div class="slide" data-slide="9">
+    <div class="slide-num">09 / 10</div>
+    <div class="slide-content">
+        <div class="section-tag">Competitive Edge</div>
+        <h2>Why NEBULAX Wins</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h4>vs. AWS / Google Cloud</h4>
+                <ul class="check-list">
+                    <li><span class="icon">✓</span> 90% cheaper</li>
+                    <li><span class="icon">✓</span> Decentralized (no censorship)</li>
+                    <li><span class="icon">✓</span> Global coverage</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>vs. Render (RNDR)</h4>
+                <ul class="check-list">
+                    <li><span class="icon">✓</span> AI-focused (not just rendering)</li>
+                    <li><span class="icon">✓</span> Mobile support</li>
+                    <li><span class="icon">✓</span> Agent marketplace</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>vs. Akash (AKT)</h4>
+                <ul class="check-list">
+                    <li><span class="icon">✓</span> Consumer devices welcome</li>
+                    <li><span class="icon">✓</span> One-click setup</li>
+                    <li><span class="icon">✓</span> AI task marketplace</li>
+                </ul>
+            </div>
+        </div>
+        <div class="stat-box" style="margin-top: 16px;">
+            <h4 style="color: #10b981;">🏆 Our Moat</h4>
+            <p style="margin: 8px 0 0;">
+                Network effects + consumer-friendly UX + multi-chain + AI agent economy = 
+                <span class="highlight">defensible market position</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 10: CTA -->
+<div class="slide" data-slide="10">
+    <div class="slide-num">10 / 10</div>
+    <div class="slide-content">
+        <div class="cta-box">
+            <svg class="logo" viewBox="0 0 120 120" fill="none" style="width:60px;height:60px;margin:0 auto 16px;">
+                <defs><linearGradient id="ring10" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse"><stop stop-color="#6d28d9"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+                <circle cx="60" cy="60" r="52" stroke="url(#ring10)" stroke-width="2" fill="none" opacity="0.5"/>
+                <path d="M38 68c0-12.2 10-22 22-22s22 9.8 22 22" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                <circle cx="60" cy="42" r="7" fill="#fff"/><circle cx="42" cy="68" r="3.5" fill="#a78bfa"/><circle cx="78" cy="68" r="3.5" fill="#22d3ee"/>
+                <line x1="46" y1="78" x2="74" y2="78" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <h2>Join the <span class="accent">Revolution</span></h2>
+            <p style="text-align:center; max-width:400px; margin: 0 auto 20px;">
+                The world's AI brain, owned by everyone. 
+                Early access is open.
+            </p>
+            <div class="cta-links">
+                <a href="https://nebulaxio.netlify.app">🌐 Website</a>
+                <a href="https://x.com/nebulax_io">🐦 Twitter</a>
+                <a href="https://nebulaxio.netlify.app/payment.html">💰 Invest</a>
+            </div>
+            <div style="margin-top: 24px;">
+                <div class="meta">
+                    <span style="color:#a78bfa;">nebulaxio.netlify.app</span> · @nebulax_io · $NBX
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Navigation dots
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('navDots');
+
+slides.forEach((slide, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'nav-dot';
+    dot.onclick = () => slide.scrollIntoView({ behavior: 'smooth' });
+    dotsContainer.appendChild(dot);
+});
+
+// Update active dot on scroll
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const index = Array.from(slides).indexOf(entry.target);
+            document.querySelectorAll('.nav-dot').forEach((d, i) => {
+                d.classList.toggle('active', i === index);
+            });
+        }
+    });
+}, { threshold: 0.5 });
+
+slides.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
