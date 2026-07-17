@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEBULAX — Twitter Content Calendar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #06060b;
+            color: #e8e6f0;
+            line-height: 1.7;
+            padding: 60px 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
+        .logo-row svg { width: 40px; height: 40px; }
+        .logo-row span {
+            font-size: 1.2rem; font-weight: 800; letter-spacing: 0.1em;
+            background: linear-gradient(135deg, #c4b5fd, #67e8f9);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        h1 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+        .subtitle { color: #9895a7; font-size: 0.95rem; margin-bottom: 40px; }
+        .divider { width: 60px; height: 2px; background: linear-gradient(90deg, #7c3aed, #06b6d4); margin: 30px 0; }
+        .section { margin-bottom: 50px; }
+        .section-tag {
+            font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+            color: #06b6d4; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 8px;
+        }
+        h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 16px; }
+        h3 { font-size: 1.1rem; font-weight: 600; color: #c4b5fd; margin: 20px 0 10px; }
+        p { color: #9895a7; font-size: 0.9rem; margin-bottom: 10px; }
+        .highlight { color: #e8e6f0; font-weight: 600; }
+
+        .card {
+            background: #111119; border: 1px solid rgba(109,40,217,0.12);
+            border-radius: 12px; padding: 20px; margin-bottom: 12px;
+        }
+        .card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 10px; color: #e8e6f0; display: flex; align-items: center; gap: 8px; }
+        .card h4 .icon-svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+        .tweet-box {
+            background: #0a0a0f; border: 1px solid rgba(109,40,217,0.1);
+            border-radius: 10px; padding: 16px; margin: 8px 0;
+            font-size: 0.88rem; color: #e8e6f0; line-height: 1.6;
+            position: relative;
+        }
+        .tweet-box .copy-btn {
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(109,40,217,0.15); border: 1px solid rgba(109,40,217,0.2);
+            color: #a78bfa; padding: 4px 10px; border-radius: 6px;
+            font-size: 0.7rem; font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .tweet-box .copy-btn:hover { background: rgba(109,40,217,0.25); }
+        .tweet-box .copy-btn.copied { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+        .day-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; background: rgba(109,40,217,0.06);
+            border-radius: 10px; margin-bottom: 12px;
+        }
+        .day-num {
+            font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+            color: #06b6d4; font-weight: 600; min-width: 50px;
+        }
+        .day-label { font-size: 0.9rem; font-weight: 600; color: #e8e6f0; }
+        .day-type {
+            font-size: 0.72rem; padding: 3px 10px; border-radius: 50px;
+            font-weight: 500; margin-left: auto;
+        }
+        .type-teaser { background: rgba(139,92,246,0.15); color: #a78bfa; }
+        .type-fact { background: rgba(6,182,212,0.15); color: #22d3ee; }
+        .type-reveal { background: rgba(16,185,129,0.15); color: #10b981; }
+        .type-thread { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .type-engagement { background: rgba(244,63,94,0.15); color: #f43f5e; }
+        .type-milestone { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .tip-box {
+            background: rgba(245,158,11,0.06); border-left: 3px solid #f59e0b;
+            padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+            font-size: 0.85rem; color: #9895a7;
+        }
+        .tip-box strong { color: #f59e0b; }
+
+        .footer { text-align: center; padding-top: 30px; border-top: 1px solid rgba(109,40,217,0.1); margin-top: 40px; }
+        .footer p { font-size: 0.75rem; color: #5c596b; }
+
+        @media (max-width: 640px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            body { padding: 30px 16px; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+<div class="logo-row">
+    <svg viewBox="0 0 120 120" fill="none"><defs><linearGradient id="r" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse"><stop stop-color="#6d28d9"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs><circle cx="60" cy="60" r="52" stroke="url(#r)" stroke-width="2" fill="none" opacity="0.5"/><path d="M38 68c0-12.2 10-22 22-22s22 9.8 22 22" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/><circle cx="60" cy="42" r="7" fill="#fff"/><circle cx="42" cy="68" r="3.5" fill="#a78bfa"/><circle cx="78" cy="68" r="3.5" fill="#22d3ee"/><line x1="46" y1="78" x2="74" y2="78" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+    <span>NEBULAX</span>
+</div>
+
+<h1>Twitter Content Calendar</h1>
+<p class="subtitle">30 days of ready-to-post tweets. Copy, paste, and post.</p>
+<div class="divider"></div>
+
+<!-- WEEK 1 -->
+<div class="section">
+    <div class="section-tag">Week 1</div>
+    <h2>The Whisper — Build Curiosity</h2>
+
+    <div class="day-header">
+        <div class="day-num">DAY 1</div>
+        <div class="day-label">Monday</div>
+        <div class="day-type type-teaser">Teaser</div>
+    </div>
+    <div class="tweet-box" id="t1">
+        <button class="copy-btn" onclick="copyTweet('t1', this)">Copy</button>
+        Something is brewing in the AI space.
+
+The way we think about computing is about to change forever.
+
+Stay tuned.
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 2</div>
+        <div class="day-label">Tuesday</div>
+        <div class="day-type type-fact">Fact</div>
+    </div>
+    <div class="tweet-box" id="t2">
+        <button class="copy-btn" onclick="copyTweet('t2', this)">Copy</button>
+        Did you know?
+
+85% of the world's GPU computing power sits idle at any given moment.
+
+Billions of devices. Trillions of wasted cycles.
+
+What if we could change that?
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 3</div>
+        <div class="day-label">Wednesday</div>
+        <div class="day-type type-teaser">Teaser</div>
+    </div>
+    <div class="tweet-box" id="t3">
+        <button class="copy-btn" onclick="copyTweet('t3', this)">Copy</button>
+        What if your phone could earn money while you sleep?
+
+What if your old laptop could help train the next AI breakthrough?
+
+What if the world's computing power belonged to everyone?
+
+Coming soon.
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 4</div>
+        <div class="day-label">Thursday</div>
+        <div class="day-type type-engagement">Engagement</div>
+    </div>
+    <div class="tweet-box" id="t4">
+        <button class="copy-btn" onclick="copyTweet('t4', this)">Copy</button>
+        Quick poll:
+
+Would you share your device's idle computing power in exchange for crypto rewards?
+
+Yes - absolutely
+Maybe - tell me more
+No - not interested
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 5</div>
+        <div class="day-label">Friday</div>
+        <div class="day-type type-reveal">Reveal</div>
+    </div>
+    <div class="tweet-box" id="t5">
+        <button class="copy-btn" onclick="copyTweet('t5', this)">Copy</button>
+        Introducing NEBULAX — The Decentralized AI Compute Network.
+
+Your devices. Your power. Your rewards.
+
+The world's AI brain, owned by everyone.
+
+Join the revolution: https://nebulaxio.netlify.app
+
+$NBX #DePIN #AI #Crypto
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 6</div>
+        <div class="day-label">Saturday</div>
+        <div class="day-type type-thread">Thread</div>
+    </div>
+    <div class="tweet-box" id="t6">
+        <button class="copy-btn" onclick="copyTweet('t6', this)">Copy</button>
+        How NEBULAX works in 3 simple steps:
+
+1/ Connect your device (phone, laptop, anything)
+2/ Share idle compute power to the global network
+3/ Earn $NBX tokens for every AI task completed
+
+No tech skills needed. No expensive hardware.
+
+Just you + the network = passive income.
+
+Learn more: https://nebulaxio.netlify.app
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 7</div>
+        <div class="day-label">Sunday</div>
+        <div class="day-type type-milestone">Milestone</div>
+    </div>
+    <div class="tweet-box" id="t7">
+        <button class="copy-btn" onclick="copyTweet('t7', this)">Copy</button>
+        One week since we revealed NEBULAX.
+
+The community response has been incredible.
+
+Thank you to everyone who joined the waitlist. This is just the beginning.
+
+$NBX #DePIN #AI
+    </div>
+</div>
+
+<!-- WEEK 2 -->
+<div class="section">
+    <div class="section-tag">Week 2</div>
+    <h2>Education — Explain the Vision</h2>
+
+    <div class="day-header">
+        <div class="day-num">DAY 8</div>
+        <div class="day-label">Monday</div>
+        <div class="day-type type-thread">Thread</div>
+    </div>
+    <div class="tweet-box" id="t8">
+        <button class="copy-btn" onclick="copyTweet('t8', this)">Copy</button>
+        The AI industry has a $100 billion problem.
+
+Training one large AI model costs $50-100 million.
+
+The biggest bottleneck? Computing power.
+
+AWS, Google, and Azure control 80% of AI compute. That's a monopoly waiting to break.
+
+NEBULAX is the alternative.
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 9</div>
+        <div class="day-label">Tuesday</div>
+        <div class="day-type type-fact">Fact</div>
+    </div>
+    <div class="tweet-box" id="t9">
+        <button class="copy-btn" onclick="copyTweet('t9', this)">Copy</button>
+        The global AI compute market is projected to reach $200 billion by 2030.
+
+Currently, 80% of that is controlled by 5 companies.
+
+NEBULAX is building the decentralized alternative.
+
+Your devices = the world's AI infrastructure.
+
+$NBX
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 10</div>
+        <div class="day-label">Wednesday</div>
+        <div class="day-type type-thread">Thread</div>
+    </div>
+    <div class="tweet-box" id="t10">
+        <button class="copy-btn" onclick="copyTweet('t10', this)">Copy</button>
+        Why NEBULAX is different from other DePIN projects:
+
+1/ Any device works — phone, laptop, desktop
+2/ One-click setup — no technical knowledge
+3/ AI-focused — not just rendering or storage
+4/ Agent marketplace — create and sell AI agents
+5/ Stake-to-compute — access AI without hardware
+
+We're not building another cloud. We're building the world's brain.
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 11</div>
+        <div class="day-label">Thursday</div>
+        <div class="day-type type-engagement">Engagement</div>
+    </div>
+    <div class="tweet-box" id="t11">
+        <button class="copy-btn" onclick="copyTweet('t11', this)">Copy</button>
+        If you could earn passive income from your devices, how would you use the extra money?
+
+Reply below 👇
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 12</div>
+        <div class="day-label">Friday</div>
+        <div class="day-type type-reveal">Reveal</div>
+    </div>
+    <div class="tweet-box" id="t12">
+        <button class="copy-btn" onclick="copyTweet('t12', this)">Copy</button>
+        NEBULAX Whitepaper is now live.
+
+11 sections covering:
+- The AI compute crisis
+- Our decentralized solution
+- Network architecture
+- Tokenomics ($NBX)
+- Roadmap to 2027
+
+Read it here: https://nebulaxio.netlify.app/whitepaper.html
+
+$NBX #DePIN #AI #Crypto
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 13</div>
+        <div class="day-label">Saturday</div>
+        <div class="day-type type-fact">Fact</div>
+    </div>
+    <div class="tweet-box" id="t13">
+        <button class="copy-btn" onclick="copyTweet('t13', this)">Copy</button>
+        $NBX Tokenomics:
+
+- Total supply: 1 billion
+- 40% community & airdrop
+- 2% burn per transaction
+- Staking rewards: 12-80% APY
+- Deflationary by design
+
+The more the network grows, the scarcer $NBX becomes.
+
+Full breakdown in the whitepaper.
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 14</div>
+        <div class="day-label">Sunday</div>
+        <div class="day-type type-milestone">Milestone</div>
+    </div>
+    <div class="tweet-box" id="t14">
+        <button class="copy-btn" onclick="copyTweet('t14', this)">Copy</button>
+        Week 2 recap:
+
+- Whitepaper released
+- Community growing daily
+- Waitlist expanding
+- Founding Members joining
+
+Thank you for believing in the vision.
+
+Next week: Founding Member program details.
+
+$NBX
+    </div>
+</div>
+
+<!-- WEEK 3 -->
+<div class="section">
+    <div class="section-tag">Week 3</div>
+    <h2>Founding Member Launch</h2>
+
+    <div class="day-header">
+        <div class="day-num">DAY 15</div>
+        <div class="day-label">Monday</div>
+        <div class="day-type type-reveal">Reveal</div>
+    </div>
+    <div class="tweet-box" id="t15">
+        <button class="copy-btn" onclick="copyTweet('t15', this)">Copy</button>
+        Founding Member program is now LIVE.
+
+What you get for $10 (one-time):
+- 2x airdrop allocation
+- Early beta access
+- Exclusive Founder NFT
+- Lifetime Pro features
+- Priority support
+- Private founder channel
+
+Only available for early supporters.
+
+Join: https://nebulaxio.netlify.app/payment.html
+
+$NBX
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 16</div>
+        <div class="day-label">Tuesday</div>
+        <div class="day-type type-thread">Thread</div>
+    </div>
+    <div class="tweet-box" id="t16">
+        <button class="copy-btn" onclick="copyTweet('t16', this)">Copy</button>
+        Why become a NEBULAX Founding Member?
+
+1/ Your $10 today = 2x airdrop tokens at launch
+2/ Early access to node software before anyone else
+3/ Exclusive NFT that proves you were here first
+4/ Lifetime Pro features (no monthly fees ever)
+5/ Direct access to the team
+
+Early believers get rewarded the most.
+
+Details: https://nebulaxio.netlify.app/payment.html
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 17</div>
+        <div class="day-label">Wednesday</div>
+        <div class="day-type type-fact">Fact</div>
+    </div>
+    <div class="tweet-box" id="t17">
+        <button class="copy-btn" onclick="copyTweet('t17', this)">Copy</button>
+        How much can you earn with NEBULAX?
+
+Estimated earnings:
+- Smartphone: $1-3/day
+- Laptop: $3-8/day
+- Gaming PC: $10-25/day
+- Server: $50-200/day
+
+Your idle devices are literally money machines.
+
+Start earning: https://nebulaxio.netlify.app
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 18</div>
+        <div class="day-label">Thursday</div>
+        <div class="day-type type-engagement">Engagement</div>
+    </div>
+    <div class="tweet-box" id="t18">
+        <button class="copy-btn" onclick="copyTweet('t18', this)">Copy</button>
+        What device would you connect to NEBULAX first?
+
+Phone
+Laptop
+Gaming PC
+All of them
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 19</div>
+        <div class="day-label">Friday</div>
+        <div class="day-type type-thread">Thread</div>
+    </div>
+    <div class="tweet-box" id="t19">
+        <button class="copy-btn" onclick="copyTweet('t19', this)">Copy</button>
+        NEBULAX Roadmap:
+
+Q3 2026 — Testnet + Community building
+Q4 2026 — Mainnet + Token launch + CEX listings
+Q1 2027 — Mobile app + 100K nodes + Binance
+Q2 2027 — Agent marketplace + Multi-chain + Enterprise
+
+We're in Phase 1 right now. The best time to join is now.
+
+Full roadmap: https://nebulaxio.netlify.app/whitepaper.html
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 20</div>
+        <div class="day-label">Saturday</div>
+        <div class="day-type type-reveal">Reveal</div>
+    </div>
+    <div class="tweet-box" id="t20">
+        <button class="copy-btn" onclick="copyTweet('t20', this)">Copy</button>
+        NEBULAX Pitch Deck is now available.
+
+10 slides covering:
+- The $100B compute crisis
+- Our decentralized solution
+- Market opportunity
+- Business model
+- Tokenomics
+- Why we win
+
+View it: https://nebulaxio.netlify.app/pitch-deck.html
+
+Share it with anyone who needs to understand NEBULAX.
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 21</div>
+        <div class="day-label">Sunday</div>
+        <div class="day-type type-milestone">Milestone</div>
+    </div>
+    <div class="tweet-box" id="t21">
+        <button class="copy-btn" onclick="copyTweet('t21', this)">Copy</button>
+        Week 3 recap:
+
+- Founding Member program launched
+- Whitepaper + Pitch Deck released
+- Community growing stronger
+- First Founding Members joined
+
+The movement is real. The revolution is here.
+
+$NBX #DePIN #AI
+    </div>
+</div>
+
+<!-- WEEK 4 -->
+<div class="section">
+    <div class="section-tag">Week 4</div>
+    <h2>Momentum — Growth & Engagement</h2>
+
+    <div class="day-header">
+        <div class="day-num">DAY 22</div>
+        <div class="day-label">Monday</div>
+        <div class="day-type type-thread">Thread</div>
+    </div>
+    <div class="tweet-box" id="t22">
+        <button class="copy-btn" onclick="copyTweet('t22', this)">Copy</button>
+        Why DePIN will be bigger than DeFi:
+
+DeFi disrupted finance with $100B+ TVL.
+
+DePIN disrupts the $200B cloud computing market.
+
+NEBULAX sits at the intersection of DePIN + AI — the two hottest narratives in crypto.
+
+This is not financial advice. This is a technology thesis.
+
+$NBX
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 23</div>
+        <div class="day-label">Tuesday</div>
+        <div class="day-type type-fact">Fact</div>
+    </div>
+    <div class="tweet-box" id="t23">
+        <button class="copy-btn" onclick="copyTweet('t23', this)">Copy</button>
+        NEBULAX vs Traditional Cloud:
+
+AWS: $0.50/hr per GPU, centralized, 99.9% uptime
+NEBULAX: $0.05/hr per GPU, decentralized, community-owned
+
+That's 90% cheaper. And it belongs to everyone.
+
+The future of compute is decentralized.
+
+$NBX
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 24</div>
+        <div class="day-label">Wednesday</div>
+        <div class="day-type type-engagement">Engagement</div>
+    </div>
+    <div class="tweet-box" id="t24">
+        <button class="copy-btn" onclick="copyTweet('t24', this)">Copy</button>
+        Tag someone who needs to know about NEBULAX.
+
+The friend with the gaming PC. The cousin with old laptops. The colleague who talks about passive income.
+
+They need to see this.
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 25</div>
+        <div class="day-label">Thursday</div>
+        <div class="day-type type-thread">Thread</div>
+    </div>
+    <div class="tweet-box" id="t25">
+        <button class="copy-btn" onclick="copyTweet('t25', this)">Copy</button>
+        NEBULAX security model:
+
+1/ End-to-end encryption for all task data
+2/ Sandboxed execution environments
+3/ Reputation system for node reliability
+4/ $500K+ bug bounty program
+5/ Multi-chain architecture for resilience
+
+Your data. Your device. Your control.
+
+Read more: https://nebulaxio.netlify.app/whitepaper.html
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 26</div>
+        <div class="day-label">Friday</div>
+        <div class="day-type type-reveal">Reveal</div>
+    </div>
+    <div class="tweet-box" id="t26">
+        <button class="copy-btn" onclick="copyTweet('t26', this)">Copy</button>
+        Introducing the NEBULAX AI Agent Hub.
+
+Create. Buy. Sell. Rent. Deploy.
+
+Autonomous AI agents that work for you 24/7.
+
+The agent economy is coming. NEBULAX is building the marketplace.
+
+$NBX
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 27</div>
+        <div class="day-label">Saturday</div>
+        <div class="day-type type-fact">Fact</div>
+    </div>
+    <div class="tweet-box" id="t27">
+        <button class="copy-btn" onclick="copyTweet('t27', this)">Copy</button>
+        $NBX burn mechanics:
+
+Every transaction on NEBULAX burns 2% of the fee.
+
+As the network grows, supply decreases.
+
+More demand + less supply = value appreciation.
+
+Simple economics. Powerful tokenomics.
+
+$NBX
+    </div>
+
+    <div class="day-header">
+        <div class="day-num">DAY 28</div>
+        <div class="day-label">Sunday</div>
+        <div class="day-type type-milestone">Milestone</div>
+    </div>
+    <div class="tweet-box" id="t28">
+        <button class="copy-btn" onclick="copyTweet('t28', this)">Copy</button>
+        One month of NEBULAX.
+
+What we built:
+- Website launched
+- Whitepaper published
+- Pitch Deck released
+- Founding Member program active
+- Community across Twitter, Discord, Telegram
+- Payment system live
+
+What's next:
+- Node software development
+- Testnet preparation
+- Strategic partnerships
+
+The journey continues. Thank you for being here.
+
+$NBX #DePIN #AI
+    </div>
+</div>
+
+<!-- WEEK 5 -->
+<div class="section">
+    <div class="section-tag">Week 5+</div>
+    <h2>Ongoing — Keep the Momentum</h2>
+
+    <div class="grid-2">
+        <div class="card">
+            <h4>
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                Recurring Content
+            </h4>
+            <p>Post these types regularly:</p>
+            <ul style="margin-left: 16px; color: #9895a7; font-size: 0.85rem;">
+                <li>Monday — Weekly update/milestone</li>
+                <li>Tuesday — Educational thread</li>
+                <li>Wednesday — Fact/stat post</li>
+                <li>Thursday — Community engagement</li>
+                <li>Friday — Feature reveal or update</li>
+                <li>Saturday — Deep dive thread</li>
+                <li>Sunday — Week recap</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h4>
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                Content Pillars
+            </h4>
+            <p>Rotate between these themes:</p>
+            <ul style="margin-left: 16px; color: #9895a7; font-size: 0.85rem;">
+                <li>AI compute industry insights</li>
+                <li>DePIN narrative & trends</li>
+                <li>NEBULAX product updates</li>
+                <li>Community stories & spotlights</li>
+                <li>Tokenomics & value proposition</li>
+                <li>Competitor comparisons</li>
+                <li>Vision & mission statements</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- HASHTAGS -->
+<div class="section">
+    <div class="section-tag">Hashtags</div>
+    <h2>Hashtag Strategy</h2>
+    <div class="card">
+        <h4>Primary (use on every post)</h4>
+        <p style="font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: #a78bfa;">
+            #NEBULAX #DePIN #AI #Crypto
+        </p>
+    </div>
+    <div class="card">
+        <h4>Secondary (rotate based on content)</h4>
+        <p style="font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: #a78bfa;">
+            #Web3 #PassiveIncome #GPU #Decentralized #Blockchain #Tokenomics #Airdrop #CryptoTwitter
+        </p>
+    </div>
+    <div class="card">
+        <h4>Trending (use when relevant)</h4>
+        <p style="font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: #a78bfa;">
+            #AIRevolution #ComputeShortage #DecentralizedFuture #CryptoGems #BullRun
+        </p>
+    </div>
+</div>
+
+<div class="footer">
+    <p>NEBULAX Twitter Content Calendar v1.0</p>
+    <p>nebulaxio.netlify.app · @nebulax_io</p>
+</div>
+
+</div>
+
+<script>
+function copyTweet(id, btn) {
+    const box = document.getElementById(id);
+    const text = box.textContent.replace('Copy', '').replace('Copied!', '').trim();
+    navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 2000);
+    }).catch(() => {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        btn.classList.add('copied');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 2000);
+    });
+}
+</script>
+
+</body>
+</html>
