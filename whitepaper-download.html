@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEBULAX Whitepaper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #06060b;
+            color: #e8e6f0;
+            font-family: 'Space Grotesk', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 16px;
+            gap: 30px;
+        }
+        .logo {
+            width: 80px; height: 80px;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            background: linear-gradient(135deg, #c4b5fd, #67e8f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sub {
+            color: #9895a7;
+            font-size: 1rem;
+            text-align: center;
+            max-width: 500px;
+        }
+        .card {
+            background: #111119;
+            border: 1px solid rgba(109,40,217,0.15);
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .card-title {
+            font-size: 0.85rem;
+            color: #a78bfa;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .sections {
+            text-align: left;
+            margin: 20px 0;
+        }
+        .sections li {
+            color: #9895a7;
+            font-size: 0.85rem;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(109,40,217,0.06);
+            list-style: none;
+        }
+        .sections li::before {
+            content: '✓';
+            color: #10b981;
+            margin-right: 10px;
+            font-weight: 700;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #6d28d9, #0e7490);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            width: 100%;
+            justify-content: center;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(109,40,217,0.3);
+        }
+        .btn:active { transform: scale(0.97); }
+        .meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            color: #5c596b;
+            margin-top: 12px;
+        }
+        .online-link {
+            display: block;
+            margin-top: 16px;
+            color: #a78bfa;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+        .online-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<svg class="logo" viewBox="0 0 120 120" fill="none">
+    <defs>
+        <linearGradient id="ring" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#6d28d9"/><stop offset="1" stop-color="#06b6d4"/>
+        </linearGradient>
+    </defs>
+    <circle cx="60" cy="60" r="52" stroke="url(#ring)" stroke-width="2" fill="none" opacity="0.5"/>
+    <path d="M38 68c0-12.2 10-22 22-22s22 9.8 22 22" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <circle cx="60" cy="42" r="7" fill="#fff"/>
+    <circle cx="42" cy="68" r="3.5" fill="#a78bfa"/>
+    <circle cx="78" cy="68" r="3.5" fill="#22d3ee"/>
+    <line x1="46" y1="78" x2="74" y2="78" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+</svg>
+
+<h1>NEBULAX</h1>
+<p class="sub">The Decentralized AI Compute Network</p>
+
+<div class="card">
+    <div class="card-title">📄 Official Whitepaper v1.0</div>
+
+    <ul class="sections">
+        <li>Executive Summary</li>
+        <li>The Problem — AI Compute Crisis</li>
+        <li>Our Solution — Network Components</li>
+        <li>How It Works — Node Operation</li>
+        <li>Network Architecture — Multi-Chain</li>
+        <li>Tokenomics — $NBX Distribution</li>
+        <li>Governance — DAO Structure</li>
+        <li>Roadmap — Q3 2026 to Q4 2027</li>
+        <li>Risk Analysis</li>
+        <li>Legal & Compliance</li>
+    </ul>
+
+    <button class="btn" onclick="downloadWP()">
+        ⬇️ Download Whitepaper
+    </button>
+
+    <div class="meta">HTML format · ~30KB · July 2026</div>
+
+    <a href="whitepaper.html" target="_blank" class="online-link">
+        📖 Read Online Instead
+    </a>
+</div>
+
+<script>
+function downloadWP() {
+    // Fetch the whitepaper HTML and trigger download
+    fetch('whitepaper.html')
+        .then(r => r.text())
+        .then(html => {
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'NEBULAX-Whitepaper.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        })
+        .catch(() => {
+            // Fallback: open in new tab
+            window.open('whitepaper.html', '_blank');
+        });
+}
+</script>
+
+</body>
+</html>
