@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEBULAX Post Images</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #06060b; color: #e8e6f0;
+            font-family: 'Space Grotesk', sans-serif;
+            padding: 30px 16px;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 40px;
+        }
+        h1 { font-size: 1.3rem; color: #a78bfa; text-align: center; }
+        .card {
+            background: #111119; border: 1px solid rgba(109,40,217,0.15);
+            border-radius: 14px; padding: 20px;
+            width: 100%; max-width: 600px; text-align: center;
+        }
+        .card-title {
+            font-size: 0.8rem; color: #5c596b; margin-bottom: 12px;
+            text-transform: uppercase; letter-spacing: 0.1em;
+        }
+        canvas {
+            width: 100%; border-radius: 10px; margin-bottom: 12px;
+            border: 1px solid rgba(109,40,217,0.1);
+        }
+        .btn {
+            display: inline-block; padding: 10px 24px;
+            background: linear-gradient(135deg, #6d28d9, #0e7490);
+            color: #fff; border: none; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer; text-decoration: none;
+        }
+        .btn:active { transform: scale(0.97); }
+        .day-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem; color: #22d3ee; margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>NEBULAX Post Images</h1>
+
+<div class="card">
+    <div class="day-label">DAY 1</div>
+    <div class="card-title">Teaser Post</div>
+    <canvas id="img1" width="1200" height="675"></canvas>
+    <br>
+    <button class="btn" onclick="download('img1', 'nebulax-day1.png')">Download</button>
+</div>
+
+<div class="card">
+    <div class="day-label">DAY 2</div>
+    <div class="card-title">Fact Post</div>
+    <canvas id="img2" width="1200" height="675"></canvas>
+    <br>
+    <button class="btn" onclick="download('img2', 'nebulax-day2.png')">Download</button>
+</div>
+
+<div class="card">
+    <div class="day-label">DAY 5</div>
+    <div class="card-title">Reveal Post</div>
+    <canvas id="img3" width="1200" height="675"></canvas>
+    <br>
+    <button class="btn" onclick="download('img3', 'nebulax-day3.png')">Download</button>
+</div>
+
+<div class="card">
+    <div class="day-label">DAY 6</div>
+    <div class="card-title">How It Works</div>
+    <canvas id="img4" width="1200" height="675"></canvas>
+    <br>
+    <button class="btn" onclick="download('img4', 'nebulax-day4.png')">Download</button>
+</div>
+
+<div class="card">
+    <div class="day-label">DAY 15</div>
+    <div class="card-title">Founding Member</div>
+    <canvas id="img5" width="1200" height="675"></canvas>
+    <br>
+    <button class="btn" onclick="download('img5', 'nebulax-day5.png')">Download</button>
+</div>
+
+<script>
+function drawBg(ctx, w, h) {
+    // Background
+    const bg = ctx.createRadialGradient(w*0.2, h*0.3, 0, w*0.5, h*0.5, w*0.7);
+    bg.addColorStop(0, '#0f0520');
+    bg.addColorStop(0.5, '#06060b');
+    bg.addColorStop(1, '#041520');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    // Grid
+    ctx.strokeStyle = 'rgba(109,40,217,0.03)';
+    ctx.lineWidth = 1;
+    for(let x=0; x<w; x+=60) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+    for(let y=0; y<h; y+=60) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+
+    // Particles
+    for(let i=0; i<30; i++) {
+        ctx.beginPath();
+        ctx.arc(Math.random()*w, Math.random()*h, Math.random()*1.5+0.5, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(167,139,250,${Math.random()*0.4+0.1})`;
+        ctx.fill();
+    }
+
+    // Glow
+    const g1 = ctx.createRadialGradient(w*0.15, h*0.4, 0, w*0.15, h*0.4, w*0.3);
+    g1.addColorStop(0, 'rgba(109,40,217,0.1)');
+    g1.addColorStop(1, 'transparent');
+    ctx.fillStyle = g1;
+    ctx.fillRect(0, 0, w, h);
+}
+
+function drawLogo(ctx, x, y, size) {
+    ctx.save();
+    ctx.translate(x, y);
+    const s = size / 120;
+
+    // Ring
+    ctx.beginPath();
+    ctx.arc(0, 0, 52*s, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(109,40,217,0.4)';
+    ctx.lineWidth = 2*s;
+    ctx.stroke();
+
+    // Brain
+    ctx.beginPath();
+    ctx.arc(0, 4*s, 22*s, Math.PI, 0, false);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 3.5*s;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // Nodes
+    ctx.beginPath(); ctx.arc(0, -16*s, 7*s, 0, Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.beginPath(); ctx.arc(-18*s, 10*s, 3.5*s, 0, Math.PI*2); ctx.fillStyle = '#a78bfa'; ctx.fill();
+    ctx.beginPath(); ctx.arc(18*s, 10*s, 3.5*s, 0, Math.PI*2); ctx.fillStyle = '#22d3ee'; ctx.fill();
+
+    // Lines
+    ctx.beginPath(); ctx.moveTo(0,-16*s); ctx.lineTo(-18*s,10*s); ctx.strokeStyle='rgba(167,139,250,0.4)'; ctx.lineWidth=1.2*s; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,-16*s); ctx.lineTo(18*s,10*s); ctx.strokeStyle='rgba(34,211,238,0.4)'; ctx.stroke();
+
+    // Bar
+    ctx.beginPath(); ctx.moveTo(-15*s,20*s); ctx.lineTo(15*s,20*s); ctx.strokeStyle='#fff'; ctx.lineWidth=3*s; ctx.lineCap='round'; ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawBrand(ctx, x, y, size) {
+    ctx.font = `800 ${size}px "Space Grotesk", sans-serif`;
+    const grad = ctx.createLinearGradient(x, y-size, x+size*6, y);
+    grad.addColorStop(0, '#c4b5fd');
+    grad.addColorStop(1, '#67e8f9');
+    ctx.fillStyle = grad;
+    ctx.textAlign = 'left';
+    ctx.fillText('NEBULAX', x, y);
+}
+
+function drawDivider(ctx, x, y, w) {
+    const grad = ctx.createLinearGradient(x, y, x+w, y);
+    grad.addColorStop(0, '#7c3aed');
+    grad.addColorStop(1, '#06b6d4');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, y, w, 2);
+}
+
+// Day 1: Teaser
+(function(){
+    const c = document.getElementById('img1');
+    const ctx = c.getContext('2d');
+    const w = 1200, h = 675;
+    drawBg(ctx, w, h);
+    drawLogo(ctx, 100, 100, 60);
+
+    ctx.font = '300 42px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#e8e6f0';
+    ctx.textAlign = 'center';
+    ctx.fillText('Something is brewing', w/2, h/2 - 30);
+    ctx.fillText('in the AI space.', w/2, h/2 + 25);
+
+    ctx.font = '400 18px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#9895a7';
+    ctx.fillText('The way we think about computing is about to change.', w/2, h/2 + 80);
+
+    drawDivider(ctx, w/2-40, h/2+100, 80);
+
+    ctx.font = '500 16px "IBM Plex Mono", monospace';
+    ctx.fillStyle = '#a78bfa';
+    ctx.fillText('Stay tuned.', w/2, h/2 + 140);
+})();
+
+// Day 2: Fact
+(function(){
+    const c = document.getElementById('img2');
+    const ctx = c.getContext('2d');
+    const w = 1200, h = 675;
+    drawBg(ctx, w, h);
+
+    ctx.font = '600 14px "IBM Plex Mono", monospace';
+    ctx.fillStyle = '#22d3ee';
+    ctx.textAlign = 'center';
+    ctx.fillText('DID YOU KNOW?', w/2, 120);
+
+    ctx.font = '800 120px "IBM Plex Mono", monospace';
+    const grad = ctx.createLinearGradient(w/2-200, 200, w/2+200, 200);
+    grad.addColorStop(0, '#a78bfa');
+    grad.addColorStop(1, '#67e8f9');
+    ctx.fillStyle = grad;
+    ctx.fillText('85%', w/2, 260);
+
+    ctx.font = '400 28px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#e8e6f0';
+    ctx.fillText('of the world\'s GPU computing power', w/2, 320);
+    ctx.fillText('sits idle at any given moment.', w/2, 360);
+
+    drawDivider(ctx, w/2-60, 390, 120);
+
+    ctx.font = '500 20px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#9895a7';
+    ctx.fillText('Billions of devices. Trillions of wasted cycles.', w/2, 440);
+
+    ctx.font = '600 22px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#a78bfa';
+    ctx.fillText('What if we could change that?', w/2, 500);
+
+    drawLogo(ctx, w-80, h-80, 40);
+})();
+
+// Day 5: Reveal
+(function(){
+    const c = document.getElementById('img3');
+    const ctx = c.getContext('2d');
+    const w = 1200, h = 675;
+    drawBg(ctx, w, h);
+    drawLogo(ctx, w/2, 180, 90);
+    drawBrand(ctx, w/2-150, 310, 50);
+
+    drawDivider(ctx, w/2-50, 330, 100);
+
+    ctx.font = '400 22px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#9895a7';
+    ctx.textAlign = 'center';
+    ctx.fillText('The Decentralized AI Compute Network', w/2, 380);
+
+    ctx.font = '500 18px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#e8e6f0';
+    ctx.fillText('Your devices. Your power. Your rewards.', w/2, 430);
+
+    // CTA
+    ctx.fillStyle = 'rgba(109,40,217,0.15)';
+    ctx.strokeStyle = 'rgba(109,40,217,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(w/2-140, 470, 280, 45, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = '600 16px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#a78bfa';
+    ctx.fillText('nebulaxio.netlify.app', w/2, 498);
+})();
+
+// Day 6: How It Works
+(function(){
+    const c = document.getElementById('img4');
+    const ctx = c.getContext('2d');
+    const w = 1200, h = 675;
+    drawBg(ctx, w, h);
+
+    ctx.font = '600 14px "IBM Plex Mono", monospace';
+    ctx.fillStyle = '#22d3ee';
+    ctx.textAlign = 'center';
+    ctx.fillText('HOW IT WORKS', w/2, 80);
+
+    drawLogo(ctx, w/2, 140, 50);
+    drawBrand(ctx, w/2-100, 210, 32);
+
+    const steps = [
+        { num: '01', title: 'Connect Your Device', desc: 'Phone, laptop, desktop — any device works' },
+        { num: '02', title: 'Share Compute Power', desc: 'Idle GPU/CPU joins the global AI network' },
+        { num: '03', title: 'Earn Rewards', desc: 'Get $NBX tokens for every task completed' }
+    ];
+
+    steps.forEach((s, i) => {
+        const x = 150 + i * 330;
+        const y = 300;
+
+        // Card bg
+        ctx.fillStyle = 'rgba(17,17,25,0.8)';
+        ctx.strokeStyle = 'rgba(109,40,217,0.12)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(x-120, y, 280, 180, 12);
+        ctx.fill();
+        ctx.stroke();
+
+        // Num
+        ctx.font = '600 12px "IBM Plex Mono", monospace';
+        ctx.fillStyle = '#5c596b';
+        ctx.textAlign = 'left';
+        ctx.fillText(s.num, x-100, y+30);
+
+        // Title
+        ctx.font = '700 18px "Space Grotesk", sans-serif';
+        ctx.fillStyle = '#e8e6f0';
+        ctx.fillText(s.title, x-100, y+65);
+
+        // Desc
+        ctx.font = '400 13px "Space Grotesk", sans-serif';
+        ctx.fillStyle = '#9895a7';
+        ctx.fillText(s.desc, x-100, y+95);
+    });
+
+    // Bottom
+    ctx.font = '500 16px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#a78bfa';
+    ctx.textAlign = 'center';
+    ctx.fillText('No tech skills needed. No expensive hardware.', w/2, 550);
+
+    ctx.font = '500 14px "IBM Plex Mono", monospace';
+    ctx.fillStyle = '#5c596b';
+    ctx.fillText('nebulaxio.netlify.app', w/2, 600);
+})();
+
+// Day 15: Founding Member
+(function(){
+    const c = document.getElementById('img5');
+    const ctx = c.getContext('2d');
+    const w = 1200, h = 675;
+    drawBg(ctx, w, h);
+
+    ctx.font = '600 14px "IBM Plex Mono", monospace';
+    ctx.fillStyle = '#10b981';
+    ctx.textAlign = 'center';
+    ctx.fillText('NOW LIVE', w/2, 80);
+
+    ctx.font = '800 42px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#e8e6f0';
+    ctx.fillText('Founding Member', w/2, 140);
+
+    ctx.font = '800 42px "Space Grotesk", sans-serif';
+    const grad = ctx.createLinearGradient(w/2-200, 160, w/2+200, 160);
+    grad.addColorStop(0, '#a78bfa');
+    grad.addColorStop(1, '#67e8f9');
+    ctx.fillStyle = grad;
+    ctx.fillText('Program', w/2, 195);
+
+    drawDivider(ctx, w/2-40, 215, 80);
+
+    // Price
+    ctx.font = '600 16px "IBM Plex Mono", monospace';
+    ctx.fillStyle = '#5c596b';
+    ctx.fillText('ONE-TIME', w/2, 260);
+    ctx.font = '800 60px "IBM Plex Mono", monospace';
+    ctx.fillStyle = '#a78bfa';
+    ctx.fillText('$10', w/2, 330);
+
+    // Perks
+    const perks = ['2x Airdrop', 'Early Beta', 'Founder NFT', 'Lifetime Pro', 'Priority Support'];
+    perks.forEach((p, i) => {
+        const x = 200 + (i % 3) * 280;
+        const y = i < 3 ? 400 : 440;
+
+        ctx.font = '500 14px "Space Grotesk", sans-serif';
+        ctx.fillStyle = '#10b981';
+        ctx.textAlign = 'left';
+        ctx.fillText('✓', x-20, y);
+        ctx.fillStyle = '#9895a7';
+        ctx.fillText(p, x, y);
+    });
+
+    // CTA
+    ctx.fillStyle = 'rgba(109,40,217,0.15)';
+    ctx.strokeStyle = 'rgba(109,40,217,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(w/2-160, 500, 320, 45, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = '600 15px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#a78bfa';
+    ctx.textAlign = 'center';
+    ctx.fillText('Join: nebulaxio.netlify.app/payment.html', w/2, 528);
+
+    drawLogo(ctx, 60, h-60, 30);
+})();
+
+function download(id, filename) {
+    const canvas = document.getElementById(id);
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL('image/png', 1.0);
+    link.click();
+}
+</script>
+
+</body>
+</html>
