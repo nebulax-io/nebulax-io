@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEBULAX Whitepaper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @page { size: A4; margin: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #06060b;
+            color: #e8e6f0;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            position: relative;
+        }
+
+        /* Cover Page */
+        .cover {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at 30% 40%, rgba(109,40,217,0.12) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 60%, rgba(6,182,212,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .cover-logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 30px;
+        }
+
+        .cover h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            background: linear-gradient(135deg, #c4b5fd, #67e8f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .cover .subtitle {
+            font-size: 1.2rem;
+            color: #9895a7;
+            margin-bottom: 40px;
+        }
+
+        .cover-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            color: #5c596b;
+        }
+
+        .cover-meta span {
+            color: #a78bfa;
+        }
+
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #7c3aed, #06b6d4);
+            margin: 30px auto;
+        }
+
+        /* Section styles */
+        .section {
+            margin-bottom: 60px;
+            page-break-inside: avoid;
+        }
+
+        .section-num {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            color: #06b6d4;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 24px 0 12px;
+            color: #c4b5fd;
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 18px 0 8px;
+            color: #a78bfa;
+        }
+
+        p {
+            color: #9895a7;
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+        }
+
+        .highlight {
+            color: #e8e6f0;
+            font-weight: 500;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background: rgba(109,40,217,0.1);
+            color: #a78bfa;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(109,40,217,0.2);
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(109,40,217,0.08);
+            color: #9895a7;
+        }
+
+        tr:hover td {
+            background: rgba(109,40,217,0.03);
+        }
+
+        /* List */
+        ul, ol {
+            margin: 12px 0 14px 24px;
+            color: #9895a7;
+            font-size: 0.95rem;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        li strong {
+            color: #e8e6f0;
+        }
+
+        /* Box */
+        .box {
+            background: #111119;
+            border: 1px solid rgba(109,40,217,0.15);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .box-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #a78bfa;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #111119;
+            border: 1px solid rgba(109,40,217,0.12);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.4rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #a78bfa, #67e8f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-lbl {
+            font-size: 0.7rem;
+            color: #5c596b;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* Code */
+        code {
+            font-family: 'IBM Plex Mono', monospace;
+            background: rgba(109,40,217,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #a78bfa;
+        }
+
+        /* Formula */
+        .formula {
+            font-family: 'IBM Plex Mono', monospace;
+            background: #111119;
+            border: 1px solid rgba(109,40,217,0.15);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+            color: #a78bfa;
+            text-align: center;
+        }
+
+        /* Chart */
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0;
+        }
+
+        .chart-label {
+            width: 180px;
+            font-size: 0.85rem;
+            color: #9895a7;
+            text-align: right;
+        }
+
+        .chart-fill {
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Footer */
+        .page-footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid rgba(109,40,217,0.1);
+            margin-top: 60px;
+        }
+
+        .page-footer p {
+            font-size: 0.75rem;
+            color: #5c596b;
+        }
+
+        /* Print */
+        @media print {
+            body { background: #fff; color: #1a1a1a; }
+            .page { padding: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="page cover">
+    <svg class="cover-logo" viewBox="0 0 120 120" fill="none">
+        <defs>
+            <linearGradient id="ring" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#6d28d9"/><stop offset="1" stop-color="#06b6d4"/>
+            </linearGradient>
+        </defs>
+        <circle cx="60" cy="60" r="52" stroke="url(#ring)" stroke-width="2" fill="none" opacity="0.5"/>
+        <path d="M38 68c0-12.2 10-22 22-22s22 9.8 22 22" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <circle cx="60" cy="42" r="7" fill="#fff"/>
+        <circle cx="42" cy="68" r="3.5" fill="#a78bfa"/>
+        <circle cx="78" cy="68" r="3.5" fill="#22d3ee"/>
+        <circle cx="60" cy="52" r="2.8" fill="#c4b5fd" opacity="0.7"/>
+        <line x1="60" y1="42" x2="42" y2="68" stroke="#a78bfa" stroke-width="1.2" opacity="0.5"/>
+        <line x1="60" y1="42" x2="78" y2="68" stroke="#22d3ee" stroke-width="1.2" opacity="0.5"/>
+        <line x1="46" y1="78" x2="74" y2="78" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+
+    <h1>NEBULAX</h1>
+    <p class="subtitle">The Decentralized AI Compute Network</p>
+    <div class="divider"></div>
+    <p style="font-size: 1rem; color: #9895a7; max-width: 500px; margin: 0 auto 30px;">
+        A peer-to-peer infrastructure network that connects idle computing devices worldwide to form a global, decentralized AI processing powerhouse.
+    </p>
+    <div class="cover-meta">
+        <span>Version 1.0</span> · July 2026 · <span>$NBX</span>
+    </div>
+    <div class="cover-meta" style="margin-top: 8px;">
+        nebulaxio.netlify.app · @nebulax_io
+    </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="page">
+    <div class="section">
+        <div class="section-num">Contents</div>
+        <h2>Table of Contents</h2>
+        <ol style="font-size: 0.95rem; color: #9895a7; line-height: 2.2;">
+            <li><strong>Executive Summary</strong></li>
+            <li><strong>The Problem</strong></li>
+            <li><strong>Our Solution</strong></li>
+            <li><strong>How It Works</strong></li>
+            <li><strong>Network Architecture</strong></li>
+            <li><strong>Tokenomics</strong></li>
+            <li><strong>Governance</strong></li>
+            <li><strong>Roadmap</strong></li>
+            <li><strong>Team & Advisors</strong></li>
+            <li><strong>Risk Analysis</strong></li>
+            <li><strong>Legal & Compliance</strong></li>
+        </ol>
+    </div>
+
+    <!-- 1. EXECUTIVE SUMMARY -->
+    <div class="section">
+        <div class="section-num">Section 01</div>
+        <h2>Executive Summary</h2>
+        <p>
+            <span class="highlight">NEBULAX</span> is a decentralized physical infrastructure network (DePIN) designed to aggregate idle computing resources from devices worldwide — smartphones, laptops, desktops, and servers — into a unified, on-demand AI compute marketplace.
+        </p>
+        <p>
+            The global AI industry faces an acute compute shortage. Training a single large language model can cost $50–100 million, and inference demands are growing exponentially. Meanwhile, billions of devices sit idle, their processing power wasted.
+        </p>
+        <p>
+            NEBULAX bridges this gap. Device owners share their idle GPU/CPU resources and earn <span class="highlight">$NBX</span> tokens. AI companies and researchers access affordable, scalable compute without massive upfront infrastructure investment.
+        </p>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-val">1B</div>
+                <div class="stat-lbl">$NBX Supply</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">140+</div>
+                <div class="stat-lbl">Countries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">12K+</div>
+                <div class="stat-lbl">Nodes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">$50M+</div>
+                <div class="stat-lbl">Market Size</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. THE PROBLEM -->
+    <div class="section">
+        <div class="section-num">Section 02</div>
+        <h2>The Problem</h2>
+
+        <h3>2.1 The AI Compute Crisis</h3>
+        <p>
+            The demand for AI compute is doubling every 6 months, while supply grows at only 20% annually. This creates a widening gap that threatens to slow AI innovation and concentrate power in the hands of a few tech giants.
+        </p>
+
+        <h3>2.2 Centralization Risk</h3>
+        <p>
+            Currently, 80% of AI compute is controlled by just 5 companies (AWS, Google Cloud, Azure, Oracle, IBM). This creates:
+        </p>
+        <ul>
+            <li><strong>Single points of failure</strong> — outages affect millions</li>
+            <li><strong>Price manipulation</strong> — no competition means inflated costs</li>
+            <li><strong>Censorship risk</strong> — platforms can deny service arbitrarily</li>
+            <li><strong>Geographic concentration</strong> — mostly US/EU, underserving Global South</li>
+        </ul>
+
+        <h3>2.3 Wasted Resources</h3>
+        <p>
+            Globally, an estimated <span class="highlight">85% of consumer GPU capacity sits idle</span> at any given time. A gaming PC used 4 hours a day wastes 20 hours of potential compute. Multiply this by billions of devices, and the untapped capacity exceeds what all cloud providers offer combined.
+        </p>
+
+        <div class="box">
+            <div class="box-title">Key Insight</div>
+            <p style="margin: 0;">
+                The world doesn't lack computing power — it lacks a network to organize it. NEBULAX is that network.
+            </p>
+        </div>
+    </div>
+
+    <!-- 3. OUR SOLUTION -->
+    <div class="section">
+        <div class="section-num">Section 03</div>
+        <h2>Our Solution</h2>
+
+        <h3>3.1 The NEBULAX Network</h3>
+        <p>
+            NEBULAX creates a two-sided marketplace:
+        </p>
+        <ul>
+            <li><strong>Supply Side:</strong> Device owners who share idle compute resources</li>
+            <li><strong>Demand Side:</strong> AI companies, researchers, and developers who need compute</li>
+        </ul>
+
+        <h3>3.2 Core Components</h3>
+
+        <h4>One-Click Node Software</h4>
+        <p>
+            Lightweight application for Windows, macOS, Linux, Android, and iOS. Installation takes under 60 seconds. The software automatically detects hardware capabilities, optimizes resource allocation, and connects to the NEBULAX network.
+        </p>
+
+        <h4>AI Task Marketplace</h4>
+        <p>
+            A decentralized marketplace where compute buyers post tasks (model training, inference, rendering) and the network automatically matches them with suitable nodes based on hardware requirements, geographic proximity, and reliability scores.
+        </p>
+
+        <h4>AI Agent Hub</h4>
+        <p>
+            A platform for creating, trading, and deploying autonomous AI agents. Users can build agents that work 24/7, generating passive income from the emerging agent economy.
+        </p>
+
+        <h4>Stake-to-Compute</h4>
+        <p>
+            Users can stake $NBX tokens to access compute credits without owning powerful hardware. This democratizes AI access for developers and researchers in resource-constrained environments.
+        </p>
+    </div>
+
+    <!-- 4. HOW IT WORKS -->
+    <div class="section">
+        <div class="section-num">Section 04</div>
+        <h2>How It Works</h2>
+
+        <h3>4.1 Node Operation</h3>
+        <ol>
+            <li><strong>Install:</strong> User installs the NEBULAX node application</li>
+            <li><strong>Register:</strong> Device capabilities are benchmarked and registered on-chain</li>
+            <li><strong>Connect:</strong> Node joins the network and begins receiving tasks</li>
+            <li><strong>Earn:</strong> $NBX tokens are distributed based on work completed</li>
+        </ol>
+
+        <h3>4.2 Task Distribution</h3>
+        <p>
+            When a compute buyer submits a task, the network's matching algorithm considers:
+        </p>
+        <ul>
+            <li><strong>Hardware requirements</strong> — GPU model, VRAM, CPU cores</li>
+            <li><strong>Reliability score</strong> — uptime history, task completion rate</li>
+            <li><strong>Geographic location</strong> — latency optimization</li>
+            <li><strong>Stake amount</strong> — higher stake = priority matching</li>
+        </ul>
+
+        <h3>4.3 Verification & Payment</h3>
+        <p>
+            Completed tasks are verified through a multi-step process:
+        </p>
+        <ol>
+            <li><strong>Proof of Compute:</strong> Node submits cryptographic proof of work done</li>
+            <li><strong>Cross-validation:</strong> Random nodes verify the output</li>
+            <li><strong>Payment:</strong> $NBX tokens are released to the provider</li>
+        </ol>
+
+        <div class="formula">
+            Reward = Base_Rate × Task_Complexity × Reliability_Score × Stake_Multiplier
+        </div>
+    </div>
+
+    <!-- 5. NETWORK ARCHITECTURE -->
+    <div class="section">
+        <div class="section-num">Section 05</div>
+        <h2>Network Architecture</h2>
+
+        <h3>5.1 Multi-Chain Design</h3>
+        <p>
+            NEBULAX operates across multiple blockchains for scalability and resilience:
+        </p>
+        <table>
+            <tr>
+                <th>Layer</th>
+                <th>Chain</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td>Settlement</td>
+                <td>Ethereum L1</td>
+                <td>Token, governance, staking</td>
+            </tr>
+            <tr>
+                <td>Execution</td>
+                <td>Base (L2)</td>
+                <td>Task matching, payments</td>
+            </tr>
+            <tr>
+                <td>High-speed</td>
+                <td>Solana</td>
+                <td>Microtransactions, real-time data</td>
+            </tr>
+            <tr>
+                <td>Storage</td>
+                <td>Arweave</td>
+                <td>Task logs, proofs</td>
+            </tr>
+        </table>
+
+        <h3>5.2 Consensus Mechanism</h3>
+        <p>
+            NEBULAX uses a novel <span class="highlight">Proof-of-Compute (PoC)</span> consensus:
+        </p>
+        <ul>
+            <li>Nodes must prove they actually performed the requested computation</li>
+            <li>Validators cross-check results using redundant computation</li>
+            <li>Disputes are resolved through a decentralized arbitration system</li>
+            <li>Staked tokens act as collateral against malicious behavior</li>
+        </ul>
+
+        <h3>5.3 Security Model</h3>
+        <p>
+            The network employs multiple security layers:
+        </p>
+        <ul>
+            <li><strong>Data encryption</strong> — All task data is encrypted end-to-end</li>
+            <li><strong>Sandboxed execution</strong> — Tasks run in isolated environments</li>
+            <li><strong>Reputation system</strong> — Malicious nodes are penalized and removed</li>
+            <li><strong>Bug bounty</strong> — $500K+ bounty program for vulnerability discovery</li>
+        </ul>
+    </div>
+
+    <!-- 6. TOKENOMICS -->
+    <div class="section">
+        <div class="section-num">Section 06</div>
+        <h2>Tokenomics</h2>
+
+        <h3>6.1 $NBX Token</h3>
+        <p>
+            $NBX is the native utility token of the NEBULAX network. It serves three primary functions:
+        </p>
+        <ul>
+            <li><strong>Medium of exchange</strong> — Payment for compute services</li>
+            <li><strong>Staking collateral</strong> — Required for node operation and compute access</li>
+            <li><strong>Governance</strong> — Voting on network parameters and upgrades</li>
+        </ul>
+
+        <h3>6.2 Token Distribution</h3>
+        <div class="box">
+            <div class="box-title">Total Supply: 1,000,000,000 $NBX</div>
+
+            <div class="chart-bar">
+                <div class="chart-label">Community & Airdrop</div>
+                <div class="chart-fill" style="width: 40%; background: #7c3aed;">40%</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Ecosystem Fund</div>
+                <div class="chart-fill" style="width: 20%; background: #06b6d4;">20%</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Team & Advisors</div>
+                <div class="chart-fill" style="width: 15%; background: #f43f5e;">15%</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Treasury</div>
+                <div class="chart-fill" style="width: 10%; background: #f59e0b;">10%</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Private Sale</div>
+                <div class="chart-fill" style="width: 10%; background: #10b981;">10%</div>
+            </div>
+            <div class="chart-bar">
+                <div class="chart-label">Public Sale (IDO)</div>
+                <div class="chart-fill" style="width: 5%; background: #8b5cf6;">5%</div>
+            </div>
+        </div>
+
+        <h3>6.3 Deflationary Mechanics</h3>
+        <p>
+            $NBX implements a burn mechanism to ensure long-term value appreciation:
+        </p>
+        <table>
+            <tr>
+                <th>Mechanism</th>
+                <th>Rate</th>
+                <th>Effect</th>
+            </tr>
+            <tr>
+                <td>Transaction burn</td>
+                <td>2% per transaction</td>
+                <td>Decreasing supply</td>
+            </tr>
+            <tr>
+                <td>Platform fee burn</td>
+                <td>1% of all fees</td>
+                <td>Deflationary pressure</td>
+            </tr>
+            <tr>
+                <td>Penalty burn</td>
+                <td>Variable</td>
+                <td>Slashing malicious nodes</td>
+            </tr>
+        </table>
+
+        <h3>6.4 Staking Rewards</h3>
+        <table>
+            <tr>
+                <th>Lock Period</th>
+                <th>APY</th>
+                <th>Benefits</th>
+            </tr>
+            <tr>
+                <td>30 days</td>
+                <td>12%</td>
+                <td>Basic staking rewards</td>
+            </tr>
+            <tr>
+                <td>90 days</td>
+                <td>25%</td>
+                <td>Priority task matching</td>
+            </tr>
+            <tr>
+                <td>180 days</td>
+                <td>45%</td>
+                <td>Enhanced rewards + governance weight</td>
+            </tr>
+            <tr>
+                <td>365 days</td>
+                <td>80%</td>
+                <td>Maximum benefits + Founding Node status</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 7. GOVERNANCE -->
+    <div class="section">
+        <div class="section-num">Section 07</div>
+        <h2>Governance</h2>
+
+        <h3>7.1 Decentralized Autonomous Organization (DAO)</h3>
+        <p>
+            NEBULAX will be governed by a DAO where $NBX holders vote on key decisions:
+        </p>
+        <ul>
+            <li><strong>Protocol upgrades</strong> — New features and network improvements</li>
+            <li><strong>Fee parameters</strong> — Transaction rates and burn percentages</li>
+            <li><strong>Treasury allocation</strong> — Fund distribution for development and grants</li>
+            <li><strong>Partnership approvals</strong> — Strategic integrations and collaborations</li>
+        </ul>
+
+        <h3>7.2 Voting Power</h3>
+        <p>
+            Voting power is calculated as:
+        </p>
+        <div class="formula">
+            Voting_Power = Staked_NBX × Lock_Multiplier × Reputation_Score
+        </div>
+        <p>
+            This ensures that long-term, committed participants have greater influence over the network's direction.
+        </p>
+    </div>
+
+    <!-- 8. ROADMAP -->
+    <div class="page">
+        <div class="section">
+            <div class="section-num">Section 08</div>
+            <h2>Roadmap</h2>
+
+            <h3>Q3 2026 — Foundation</h3>
+            <ul>
+                <li>Testnet launch with 1,000 beta testers</li>
+                <li>Open-source node software release</li>
+                <li>Airdrop points system activation</li>
+                <li>Founding Member program opens</li>
+                <li>Community building (Twitter, Discord, Telegram)</li>
+            </ul>
+
+            <h3>Q4 2026 — Launch</h3>
+            <ul>
+                <li>Mainnet deployment</li>
+                <li>$NBX Token Generation Event (TGE)</li>
+                <li>IDO on three launchpads</li>
+                <li>CEX listings (Gate, KuCoin, MEXC)</li>
+                <li>First enterprise AI integration</li>
+            </ul>
+
+            <h3>Q1 2027 — Scale</h3>
+            <ul>
+                <li>Mobile app launch (Android & iOS)</li>
+                <li>Binance listing</li>
+                <li>100,000 active nodes milestone</li>
+                <li>Partnership with major AI research lab</li>
+            </ul>
+
+            <h3>Q2 2027 — Ecosystem</h3>
+            <ul>
+                <li>AI Agent marketplace launch</li>
+                <li>Cross-chain support (Solana, Base, Arbitrum)</li>
+                <li>Enterprise tier launch</li>
+                <li>$NBX payment gateway for AI services</li>
+            </ul>
+
+            <h3>Q3-Q4 2027 — Domination</h3>
+            <ul>
+                <li>Top 30 token by market cap</li>
+                <li>1,000,000+ active nodes worldwide</li>
+                <li>DAO treasury exceeds $1B</li>
+                <li>Strategic partnerships with Fortune 500 companies</li>
+            </ul>
+        </div>
+
+        <!-- 9. TEAM -->
+        <div class="section">
+            <div class="section-num">Section 09</div>
+            <h2>Team & Advisors</h2>
+            <p>
+                NEBULAX is built by a distributed team of engineers, researchers, and crypto veterans with deep expertise in AI systems, blockchain infrastructure, and decentralized networks.
+            </p>
+            <div class="box">
+                <div class="box-title">Note</div>
+                <p style="margin: 0;">
+                    Full team details will be disclosed prior to the Token Generation Event. Founding team members operate under pseudonymous identities with verifiable on-chain track records and contributions to major DePIN and AI projects.
+                </p>
+            </div>
+        </div>
+
+        <!-- 10. RISK ANALYSIS -->
+        <div class="section">
+            <div class="section-num">Section 10</div>
+            <h2>Risk Analysis</h2>
+
+            <table>
+                <tr>
+                    <th>Risk</th>
+                    <th>Likelihood</th>
+                    <th>Mitigation</th>
+                </tr>
+                <tr>
+                    <td>Regulatory crackdown</td>
+                    <td>Medium</td>
+                    <td>Multi-jurisdiction structure, legal compliance</td>
+                </tr>
+                <tr>
+                    <td>Hardware vendor competition</td>
+                    <td>Low</td>
+                    <td>Open network, anyone can join</td>
+                </tr>
+                <tr>
+                    <td>Network reliability</td>
+                    <td>Medium</td>
+                    <td>Redundant computation, reputation system</td>
+                </tr>
+                <tr>
+                    <td>Security breach</td>
+                    <td>Low</td>
+                    <td>Encryption, sandboxing, bug bounty</td>
+                </tr>
+                <tr>
+                    <td>Token price volatility</td>
+                    <td>High</td>
+                    <td>Deflationary mechanics, real utility demand</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 11. LEGAL -->
+        <div class="section">
+            <div class="section-num">Section 11</div>
+            <h2>Legal & Compliance</h2>
+            <p>
+                NEBULAX operates with a commitment to regulatory compliance across all jurisdictions where it operates. The project has engaged legal counsel in key markets and will continue to adapt to evolving regulatory frameworks.
+            </p>
+            <ul>
+                <li><strong>Token classification:</strong> Utility token for network access</li>
+                <li><strong>KYC/AML:</strong> Implemented for Founding Members and large transactions</li>
+                <li><strong>Restricted jurisdictions:</strong> Service may be limited in certain regions per local law</li>
+                <li><strong>Data protection:</strong> GDPR and CCPA compliant data handling</li>
+            </ul>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="page-footer">
+            <p>© 2026 NEBULAX. All rights reserved.</p>
+            <p>nebulaxio.netlify.app · @nebulax_io · t.me/nebulax_official</p>
+            <p style="margin-top: 8px;">This document is for informational purposes only and does not constitute financial advice.</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

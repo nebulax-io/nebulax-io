@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEBULAX Brand Assets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #0a0a0f;
+            color: #e8e6f0;
+            padding: 30px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+        h1 { font-size: 1.3rem; color: #9895a7; font-weight: 400; }
+        h1 span { color: #a78bfa; font-weight: 700; }
+        .card {
+            background: #111119;
+            border: 1px solid rgba(109,40,217,0.15);
+            border-radius: 14px;
+            padding: 24px;
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+        }
+        .card-title {
+            font-size: 0.85rem;
+            color: #a78bfa;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .preview-logo {
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: block;
+            border: 2px solid rgba(109,40,217,0.2);
+        }
+        .preview-cover {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            display: block;
+            border: 1px solid rgba(109,40,217,0.15);
+        }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6d28d9, #0e7490);
+            color: #fff;
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #a78bfa;
+            border: 1px solid rgba(109,40,217,0.3);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(109,40,217,0.25); }
+        .note {
+            font-size: 0.75rem;
+            color: #5c596b;
+            margin-top: 12px;
+        }
+        .tip {
+            font-size: 0.8rem;
+            color: #f59e0b;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(245,158,11,0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(245,158,11,0.15);
+        }
+    </style>
+</head>
+<body>
+
+<h1>NEBULAX <span>Brand Assets</span></h1>
+
+<!-- LOGO -->
+<div class="card">
+    <div class="card-title">Profile Picture</div>
+    <img src="logo.svg" class="preview-logo" alt="NEBULAX Logo">
+    <div class="btn-row">
+        <a class="btn btn-primary" href="logo.svg" download="nebulax-logo.svg">⬇️ SVG (Best)</a>
+        <button class="btn btn-secondary" onclick="downloadPNG('logo')">⬇️ PNG</button>
+    </div>
+    <div class="note">SVG = color কখনো নষ্ট হবে না</div>
+    <div class="tip">💡 Twitter এ PNG upload করলেও color sharp থাকবে</div>
+</div>
+
+<!-- COVER -->
+<div class="card">
+    <div class="card-title">Cover Banner</div>
+    <img src="cover.svg" class="preview-cover" alt="NEBULAX Cover">
+    <div class="btn-row">
+        <a class="btn btn-primary" href="cover.svg" download="nebulax-cover.svg">⬇️ SVG (Best)</a>
+        <button class="btn btn-secondary" onclick="downloadPNG('cover')">⬇️ PNG</button>
+    </div>
+    <div class="note">SVG = color কখনো নষ্ট হবে না</div>
+</div>
+
+<canvas id="hiddenCanvas" style="display:none"></canvas>
+
+<script>
+function downloadPNG(type) {
+    const canvas = document.getElementById('hiddenCanvas');
+    const ctx = canvas.getContext('2d');
+
+    if (type === 'logo') {
+        canvas.width = 800;
+        canvas.height = 800;
+        const img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0, 800, 800);
+            const link = document.createElement('a');
+            link.download = 'nebulax-logo.png';
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+        };
+        img.src = 'logo.svg';
+    } else {
+        canvas.width = 3000;
+        canvas.height = 1000;
+        const img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0, 3000, 1000);
+            const link = document.createElement('a');
+            link.download = 'nebulax-cover.png';
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+        };
+        img.src = 'cover.svg';
+    }
+}
+</script>
+
+</body>
+</html>
